@@ -17,4 +17,5 @@ export default {
 
   gray: "#CCCCCC",
   gray2: "#A39E9E",
+  error: "#FF0000",
 };

@@ -5,18 +5,20 @@ import Colors from "@/constants/Colors";
 import { getPatientsApi } from "@/services/PatientsApi";
 import { usePatientsStore } from "@/store/usePatientsStore";
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { enrichPatientData, sortPatientsByDate } from "@/utils/utils";
 import { EnrichedPatient } from "@/services/types";
 import { FAB } from "@/components/FAB";
 import { PatientModal } from "@/components/PatientModal";
 import Toast from "react-native-toast-message";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PatientsScreen() {
   const { patients, setPatients, createPatient, updatePatient } = usePatientsStore();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<EnrichedPatient | undefined>();
+  const [filteredPatients, setFilteredPatients] = useState<EnrichedPatient[]>([]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -24,6 +26,10 @@ export default function PatientsScreen() {
     getPatients({ signal });
     return () => abortController.abort();
   }, []);
+
+  useEffect(() => {
+    setFilteredPatients(patients);
+  }, [patients]);
 
   const getPatients = async ({ signal }: { signal: AbortSignal }) => {
     try {
@@ -69,15 +75,36 @@ export default function PatientsScreen() {
     setModalVisible(true);
   };
 
+  const handleSearch = (query: string) => {
+    if (!query.trim()) {
+      setFilteredPatients(patients);
+      return;
+    }
+
+    const searchTerm = query.toLowerCase();
+
+    const searchResults = patients.filter(patient => {
+      return patient.name.toLowerCase().includes(searchTerm);
+    });
+    setFilteredPatients(searchResults);
+  };
+
   return (
-    <View style={styles.container}>
-      <Header title="Patients" search={true} searchPlaceholder="Search patients" />
+    <SafeAreaView style={styles.container}>
+      <Header
+        title="Patients"
+        search={true}
+        searchPlaceholder="Search patients"
+        onSearch={handleSearch}
+      />
       <View style={styles.resultsContainer}>
         <CustomText style={styles.resultsTitle}>Results</CustomText>
-        {isLoading && patients.length === 0 && <Text>Loading...</Text>}
+        {isLoading && patients.length === 0 && (
+          <ActivityIndicator size="large" color={Colors.primary} />
+        )}
         {!isLoading && patients.length > 0 && (
           <FlatList
-            data={patients}
+            data={filteredPatients}
             renderItem={({ item }) => <Card patient={item} onEdit={handleEditPatient} />}
             contentContainerStyle={{ gap: 10 }}
           />
@@ -91,18 +118,20 @@ export default function PatientsScreen() {
         }}
       />
 
-      <PatientModal
-        visible={modalVisible}
-        onClose={() => {
-          setModalVisible(false);
-          setSelectedPatient(undefined);
-        }}
-        onSave={handleSavePatient}
-        patient={selectedPatient}
-      />
+      {modalVisible && (
+        <PatientModal
+          visible={modalVisible}
+          onClose={() => {
+            setModalVisible(false);
+            setSelectedPatient(undefined);
+          }}
+          onSave={handleSavePatient}
+          patient={selectedPatient}
+        />
+      )}
 
       <Toast />
-    </View>
+    </SafeAreaView>
   );
 }
 

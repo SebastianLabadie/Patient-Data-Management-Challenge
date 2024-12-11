@@ -1,8 +1,9 @@
 import Colors from "@/constants/Colors";
 import { EnrichedPatient } from "@/services/types";
-import { StyleSheet, Text, View, TouchableOpacity, Image, Pressable } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Image, Pressable } from "react-native";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import CustomText from "./CustomText";
 
 interface CardProps {
   patient: EnrichedPatient;
@@ -41,8 +42,8 @@ export function Card({ patient, onEdit }: CardProps) {
             style={styles.avatar}
           />
           <View style={styles.info}>
-            <Text style={styles.name}>{patient.name}</Text>
-            <Text style={styles.details}>{patient.age} years</Text>
+            <CustomText style={styles.name}>{patient.name}</CustomText>
+            <CustomText style={styles.details}>{patient.age} years</CustomText>
           </View>
           {onEdit && (
             <TouchableOpacity onPress={() => onEdit(patient)} style={styles.editButton}>
@@ -62,11 +63,11 @@ export function Card({ patient, onEdit }: CardProps) {
         <View style={styles.expandedCard}>
           <View style={styles.detailRow}>
             <Ionicons name="mail-outline" size={16} color={Colors.gray} style={styles.detailIcon} />
-            <Text style={styles.details}>{patient.email}</Text>
+            <CustomText style={styles.details}>{patient.email}</CustomText>
           </View>
           <View style={styles.detailRow}>
             <Ionicons name="call-outline" size={16} color={Colors.gray} style={styles.detailIcon} />
-            <Text style={styles.details}>{patient.phone}</Text>
+            <CustomText style={styles.details}>{patient.phone}</CustomText>
           </View>
           <View style={styles.detailRow}>
             <Ionicons
@@ -75,7 +76,7 @@ export function Card({ patient, onEdit }: CardProps) {
               color={Colors.gray}
               style={styles.detailIcon}
             />
-            <Text style={styles.details}>{patient.address}</Text>
+            <CustomText style={styles.details}>{patient.address}</CustomText>
           </View>
           <View style={styles.detailRow}>
             <Ionicons
@@ -84,7 +85,7 @@ export function Card({ patient, onEdit }: CardProps) {
               color={Colors.gray}
               style={styles.detailIcon}
             />
-            <Text style={styles.details}>{patient.website}</Text>
+            <CustomText style={styles.details}>{patient.website}</CustomText>
           </View>
           <View style={styles.detailRow}>
             <Ionicons
@@ -93,7 +94,7 @@ export function Card({ patient, onEdit }: CardProps) {
               color={Colors.gray}
               style={styles.detailIcon}
             />
-            <Text style={styles.details}>{patient.gender}</Text>
+            <CustomText style={styles.details}>{patient.gender}</CustomText>
           </View>
         </View>
       )}

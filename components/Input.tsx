@@ -7,10 +7,10 @@ import {
   TextStyle,
   KeyboardTypeOptions,
   View,
-  Text,
   TextInput,
   Platform,
 } from "react-native";
+import CustomText from "./CustomText";
 type InputType = "text" | "password" | "number";
 
 interface InputProps {
@@ -23,11 +23,11 @@ interface InputProps {
   placeholderStyle?: StyleProp<TextStyle>;
   dateValue?: Date;
   keyboardType?: KeyboardTypeOptions | undefined;
-  onDateChange?: (date: Date) => void;
   value?: any;
   defaultValue?: any;
   onChangeText?: (text: string) => void;
   onBlur?: (text: string) => void;
+  error?: string;
 }
 export default function Input({
   style,
@@ -42,10 +42,12 @@ export default function Input({
   defaultValue,
   onChangeText,
   onBlur,
+  error,
 }: InputProps) {
   return (
     <View>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <CustomText style={styles.label}>{label}</CustomText>}
+      {error && <CustomText style={styles.errorText}>{error}</CustomText>}
       <View style={[styles.inputContainer, style]}>
         {iconLeft && <View style={styles.iconContainer}>{iconLeft}</View>}
         <TextInput
@@ -62,7 +64,7 @@ export default function Input({
               onBlur(event.nativeEvent.text);
             }
           }}
-          style={[styles.inputField, placeholderStyle]}
+          style={[styles.inputField, placeholderStyle, error && styles.inputError]}
         />
         {iconRight && <View style={styles.iconContainer}>{iconRight}</View>}
       </View>
@@ -95,10 +97,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   label: {
-    fontFamily: "Inter",
     fontSize: 16,
     color: Colors.primary,
     marginBottom: 4,
     lineHeight: Platform.OS === "ios" ? 24 : 20,
+  },
+  inputError: {
+    borderColor: Colors.error,
+  },
+  errorText: {
+    color: Colors.error,
+    fontSize: 12,
+    marginTop: 2,
   },
 });

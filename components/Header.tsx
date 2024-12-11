@@ -9,6 +9,7 @@ type HeaderProps = {
   search?: boolean;
   searchPlaceholder?: string;
   rightComponent?: React.ReactNode;
+  onSearch?: (query: string) => void;
 };
 
 export function Header({
@@ -16,6 +17,7 @@ export function Header({
   search = false,
   searchPlaceholder = "Search",
   rightComponent,
+  onSearch,
 }: HeaderProps) {
   return (
     <View style={styles.container}>
@@ -28,6 +30,7 @@ export function Header({
           style={styles.search}
           placeholder={searchPlaceholder}
           iconRight={<Feather name="search" size={24} color={Colors.gray2} />}
+          onBlur={text => onSearch?.(text)}
         />
       )}
     </View>
