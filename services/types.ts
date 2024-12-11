@@ -1,5 +1,4 @@
 interface BasePatient {
-  name: string;
   age: number;
   gender: string;
 }
@@ -12,12 +11,20 @@ interface ContactInfo {
 
 interface MediaContent {
   photo?: string;
-  avatar: string;
 }
 
-export interface EnrichedPatient extends BasePatient, ContactInfo, MediaContent {
+export interface Patient {
+  name: string;
   id: string;
   website: string;
   createdAt: string;
   description: string;
+  avatar: string;
+}
+
+export interface EnrichedPatient extends BasePatient, ContactInfo, MediaContent, Patient {}
+
+export interface DropdownItem {
+  label: string;
+  value: string;
 }

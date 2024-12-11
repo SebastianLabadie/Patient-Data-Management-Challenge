@@ -3,10 +3,10 @@ import { Modal, View, StyleSheet, Pressable, Image } from "react-native";
 import CustomText from "./CustomText";
 import Colors from "@/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
-import { Dropdown } from "react-native-element-dropdown";
 import { GENDERS } from "@/utils/utils";
 import Input from "./Input";
 import { usePatientForm } from "@/hooks/usePatientForm";
+import { CustomDropdown } from "./CustomDropdown";
 
 interface PatientModalProps {
   visible: boolean;
@@ -133,19 +133,14 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
             keyboardType="url"
             error={errors.website}
           />
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
+          <CustomDropdown
             data={GENDERS}
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder="Select Gender"
-            value={formData.gender}
+            value={formData.gender || ""}
             onChange={item => {
               updateField("gender", item.value);
             }}
+            placeholder="Select Gender"
+            error={errors.gender}
           />
 
           <View style={styles.buttonContainer}>
@@ -233,23 +228,5 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.gray,
     justifyContent: "center",
     alignItems: "center",
-  },
-  dropdown: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: Colors.gray,
-    borderRadius: 8,
-    paddingHorizontal: 14,
-    marginBottom: 10,
-    backgroundColor: Colors.white,
-    color: Colors.error,
-  },
-  placeholderStyle: {
-    color: Colors.gray,
-    fontSize: 15,
-    backgroundColor: Colors.white,
-  },
-  selectedTextStyle: {
-    color: Colors.black,
   },
 });
