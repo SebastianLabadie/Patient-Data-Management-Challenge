@@ -5,7 +5,7 @@ import Colors from "@/constants/Colors";
 import { getPatientsApi } from "@/services/PatientsApi";
 import { usePatientsStore } from "@/store/usePatientsStore";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { enrichPatientData, sortPatientsByDate } from "@/utils/utils";
 import { EnrichedPatient } from "@/services/types";
 import { FAB } from "@/components/FAB";
@@ -23,32 +23,33 @@ export default function PatientsScreen() {
   useEffect(() => {
     const abortController = new AbortController();
     const signal = abortController.signal;
-    getPatients({ signal });
+
+    const getPatients = async () => {
+      try {
+        setIsLoading(true);
+        const fetchedPatients = await getPatientsApi({ signal });
+        const enrichedPatients = enrichPatientData(fetchedPatients);
+        const sortedPatients = sortPatientsByDate(enrichedPatients);
+        setPatients(sortedPatients);
+      } catch (error) {
+        console.error(error);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Failed to fetch patients",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getPatients();
     return () => abortController.abort();
-  }, []);
+  }, [setPatients]);
 
   useEffect(() => {
     setFilteredPatients(patients);
   }, [patients]);
-
-  const getPatients = async ({ signal }: { signal: AbortSignal }) => {
-    try {
-      setIsLoading(true);
-      const fetchedPatients = await getPatientsApi({ signal });
-      const enrichedPatients = enrichPatientData(fetchedPatients);
-      const sortedPatients = sortPatientsByDate(enrichedPatients);
-      setPatients(sortedPatients);
-    } catch (error) {
-      console.error(error);
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Failed to fetch patients",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSavePatient = (patient: EnrichedPatient) => {
     if (selectedPatient) {

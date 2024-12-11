@@ -1,17 +1,23 @@
-export type Patient = {
-  createdAt: string;
+interface BasePatient {
   name: string;
-  avatar: string;
-  description: string;
-  website: string;
-  id: string;
-};
-
-export interface EnrichedPatient extends Patient {
-  gender: string;
   age: number;
-  address: string;
-  phone: string;
+  gender: string;
+}
+
+interface ContactInfo {
   email: string;
+  phone: string;
+  address: string;
+}
+
+interface MediaContent {
   photo?: string;
+  avatar: string;
+}
+
+export interface EnrichedPatient extends BasePatient, ContactInfo, MediaContent {
+  id: string;
+  website: string;
+  createdAt: string;
+  description: string;
 }

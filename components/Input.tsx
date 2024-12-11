@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
     padding: 0,
+    borderWidth: 0,
   },
   iconContainer: {
     width: 32,
@@ -108,6 +109,5 @@ const styles = StyleSheet.create({
   errorText: {
     color: Colors.error,
     fontSize: 12,
-    marginTop: 2,
   },
 });

@@ -1,13 +1,12 @@
 import { EnrichedPatient } from "@/services/types";
-import { useEffect, useState } from "react";
 import { Modal, View, StyleSheet, Pressable, Image } from "react-native";
 import CustomText from "./CustomText";
 import Colors from "@/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
 import { Dropdown } from "react-native-element-dropdown";
 import { GENDERS } from "@/utils/utils";
-import { z } from "zod";
 import Input from "./Input";
+import { usePatientForm } from "@/hooks/usePatientForm";
 
 interface PatientModalProps {
   visible: boolean;
@@ -16,26 +15,8 @@ interface PatientModalProps {
   patient?: EnrichedPatient;
 }
 
-const patientSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  age: z.number().min(1, "Age must be positive").max(150, "Invalid age"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().refine(value => /^[+]{1}(?:[0-9-()/.]\s?){6,15}[0-9]{1}$/.test(value), {
-    message: "Invalid phone number",
-  }),
-  address: z.string().min(1, "Address is required"),
-  photo: z.string().optional(),
-  avatar: z.string().optional(),
-  website: z.string().url("Invalid website URL").optional(),
-  gender: z.string().min(1, "Gender is required"),
-});
-
-type ValidationErrors = {
-  [K in keyof EnrichedPatient]?: string;
-};
-
 export function PatientModal({ visible, onClose, onSave, patient }: PatientModalProps) {
-  const [formData, setFormData] = useState<Partial<EnrichedPatient>>({
+  const initialData = {
     name: "",
     age: 0,
     email: "",
@@ -44,43 +25,15 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
     photo: "",
     website: "",
     gender: "",
-  });
-  const [errors, setErrors] = useState<ValidationErrors>({});
+  };
 
-  useEffect(() => {
-    console.log("patient", patient);
-    if (patient) {
-      setFormData(patient);
-    } else {
-      setFormData({
-        name: "",
-        age: 0,
-        email: "",
-        phone: "",
-        address: "",
-        photo: "",
-        website: "",
-        gender: "",
-      });
-    }
-  }, []);
+  const { formData, errors, validateForm, updateField } = usePatientForm(patient || initialData);
 
   const handleSave = () => {
-    try {
-      const validatedData = patientSchema.parse(formData);
-      onSave(validatedData as EnrichedPatient);
+    const { isValid, data } = validateForm();
+    if (isValid && data) {
+      onSave(data);
       onClose();
-    } catch (error) {
-      console.log("formData", formData);
-      console.log("error", error);
-      if (error instanceof z.ZodError) {
-        const newErrors: ValidationErrors = {};
-        error.errors.forEach(err => {
-          const path = err.path[0] as keyof EnrichedPatient;
-          newErrors[path] = err.message;
-        });
-        setErrors(newErrors);
-      }
     }
   };
 
@@ -100,7 +53,8 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
     });
 
     if (!result.canceled) {
-      setFormData({ ...formData, photo: result.assets[0].uri, avatar: result.assets[0].uri });
+      updateField("photo", result.assets[0].uri);
+      updateField("avatar", result.assets[0].uri);
     }
   };
 
@@ -135,10 +89,7 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
           <Input
             style={[styles.input]}
             value={formData.name}
-            onChangeText={text => {
-              setFormData({ ...formData, name: text });
-              setErrors({ ...errors, name: undefined });
-            }}
+            onChangeText={text => updateField("name", text)}
             placeholder="Name"
             error={errors.name}
           />
@@ -146,7 +97,7 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
           <Input
             style={[styles.input]}
             value={formData.age?.toString()}
-            onChangeText={text => setFormData({ ...formData, age: Number(text) })}
+            onChangeText={text => updateField("age", Number(text))}
             placeholder="Age"
             keyboardType="numeric"
             error={errors.age}
@@ -154,7 +105,7 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
           <Input
             style={styles.input}
             value={formData.email}
-            onChangeText={text => setFormData({ ...formData, email: text })}
+            onChangeText={text => updateField("email", text)}
             placeholder="Email"
             keyboardType="email-address"
             error={errors.email}
@@ -162,7 +113,7 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
           <Input
             style={styles.input}
             value={formData.phone}
-            onChangeText={text => setFormData({ ...formData, phone: text })}
+            onChangeText={text => updateField("phone", text)}
             placeholder="Phone"
             keyboardType="phone-pad"
             error={errors.phone}
@@ -170,14 +121,14 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
           <Input
             style={styles.input}
             value={formData.address}
-            onChangeText={text => setFormData({ ...formData, address: text })}
+            onChangeText={text => updateField("address", text)}
             placeholder="Address"
             error={errors.address}
           />
           <Input
             style={styles.input}
             value={formData.website}
-            onChangeText={text => setFormData({ ...formData, website: text })}
+            onChangeText={text => updateField("website", text)}
             placeholder="Website"
             keyboardType="url"
             error={errors.website}
@@ -193,7 +144,7 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
             placeholder="Select Gender"
             value={formData.gender}
             onChange={item => {
-              setFormData({ ...formData, gender: item.value });
+              updateField("gender", item.value);
             }}
           />
 
