@@ -1,5 +1,13 @@
 import { EnrichedPatient } from "@/services/types";
-import { Modal, View, StyleSheet, Pressable, Image } from "react-native";
+import {
+  Modal,
+  View,
+  StyleSheet,
+  Pressable,
+  Image,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import CustomText from "./CustomText";
 import Colors from "@/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
@@ -59,91 +67,93 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <CustomText style={styles.modalTitle}>
-            {patient ? "Edit Patient" : "Add Patient"}
-          </CustomText>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <CustomText style={styles.modalTitle}>
+              {patient ? "Edit Patient" : "Add Patient"}
+            </CustomText>
 
-          <View style={styles.photoContainer}>
-            <Pressable onPress={handleSelectPhoto}>
-              {formData.avatar ? (
-                <Image source={{ uri: formData.avatar }} style={styles.photo} />
-              ) : (
-                <View style={styles.photoPlaceholder}>
-                  <CustomText>Tap to add photo</CustomText>
-                </View>
-              )}
-            </Pressable>
-          </View>
+            <View style={styles.photoContainer}>
+              <Pressable onPress={handleSelectPhoto}>
+                {formData.avatar ? (
+                  <Image source={{ uri: formData.avatar }} style={styles.photo} />
+                ) : (
+                  <View style={styles.photoPlaceholder}>
+                    <CustomText>Tap to add photo</CustomText>
+                  </View>
+                )}
+              </Pressable>
+            </View>
 
-          <Input
-            style={[styles.input]}
-            value={formData.name}
-            onChangeText={text => updateField("name", text)}
-            placeholder="Name"
-            error={errors.name}
-          />
+            <Input
+              style={[styles.input]}
+              value={formData.name}
+              onChangeText={text => updateField("name", text)}
+              placeholder="Name"
+              error={errors.name}
+            />
 
-          <Input
-            style={[styles.input]}
-            value={formData.age?.toString()}
-            onChangeText={text => updateField("age", Number(text))}
-            placeholder="Age"
-            keyboardType="numeric"
-            error={errors.age}
-          />
-          <Input
-            style={styles.input}
-            value={formData.email}
-            onChangeText={text => updateField("email", text)}
-            placeholder="Email"
-            keyboardType="email-address"
-            error={errors.email}
-          />
-          <Input
-            style={styles.input}
-            value={formData.phone}
-            onChangeText={text => updateField("phone", text)}
-            placeholder="Phone"
-            keyboardType="phone-pad"
-            error={errors.phone}
-          />
-          <Input
-            style={styles.input}
-            value={formData.address}
-            onChangeText={text => updateField("address", text)}
-            placeholder="Address"
-            error={errors.address}
-          />
-          <Input
-            style={styles.input}
-            value={formData.website}
-            onChangeText={text => updateField("website", text)}
-            placeholder="Website"
-            keyboardType="url"
-            error={errors.website}
-          />
-          <CustomDropdown
-            data={GENDERS}
-            value={formData.gender || ""}
-            onChange={item => {
-              updateField("gender", item.value);
-            }}
-            placeholder="Select Gender"
-            error={errors.gender}
-          />
+            <Input
+              style={[styles.input]}
+              value={formData.age?.toString()}
+              onChangeText={text => updateField("age", Number(text))}
+              placeholder="Age"
+              keyboardType="numeric"
+              error={errors.age}
+            />
+            <Input
+              style={styles.input}
+              value={formData.email}
+              onChangeText={text => updateField("email", text)}
+              placeholder="Email"
+              keyboardType="email-address"
+              error={errors.email}
+            />
+            <Input
+              style={styles.input}
+              value={formData.phone}
+              onChangeText={text => updateField("phone", text)}
+              placeholder="Phone"
+              keyboardType="phone-pad"
+              error={errors.phone}
+            />
+            <Input
+              style={styles.input}
+              value={formData.address}
+              onChangeText={text => updateField("address", text)}
+              placeholder="Address"
+              error={errors.address}
+            />
+            <Input
+              style={styles.input}
+              value={formData.website}
+              onChangeText={text => updateField("website", text)}
+              placeholder="Website"
+              keyboardType="url"
+              error={errors.website}
+            />
+            <CustomDropdown
+              data={GENDERS}
+              value={formData.gender || ""}
+              onChange={item => {
+                updateField("gender", item.value);
+              }}
+              placeholder="Select Gender"
+              error={errors.gender}
+            />
 
-          <View style={styles.buttonContainer}>
-            <Pressable style={[styles.button, styles.cancelButton]} onPress={onClose}>
-              <CustomText style={styles.buttonText}>Cancel</CustomText>
-            </Pressable>
-            <Pressable style={[styles.button, styles.saveButton]} onPress={handleSave}>
-              <CustomText style={styles.buttonText}>Save</CustomText>
-            </Pressable>
+            <View style={styles.buttonContainer}>
+              <Pressable style={[styles.button, styles.cancelButton]} onPress={onClose}>
+                <CustomText style={styles.buttonText}>Cancel</CustomText>
+              </Pressable>
+              <Pressable style={[styles.button, styles.saveButton]} onPress={handleSave}>
+                <CustomText style={styles.buttonText}>Save</CustomText>
+              </Pressable>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 }

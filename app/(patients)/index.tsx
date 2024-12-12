@@ -5,7 +5,14 @@ import Colors from "@/constants/Colors";
 import { getPatientsApi } from "@/services/PatientsApi";
 import { usePatientsStore } from "@/store/usePatientsStore";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  View,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { enrichPatientData, sortPatientsByDate } from "@/utils/utils";
 import { EnrichedPatient } from "@/services/types";
 import { FAB } from "@/components/FAB";
@@ -90,48 +97,50 @@ export default function PatientsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header
-        title="Patients"
-        search={true}
-        searchPlaceholder="Search patients"
-        onSearch={handleSearch}
-      />
-      <View style={styles.resultsContainer}>
-        <CustomText style={styles.resultsTitle}>Results</CustomText>
-        {isLoading && patients.length === 0 && (
-          <ActivityIndicator size="large" color={Colors.primary} />
-        )}
-        {!isLoading && patients.length > 0 && (
-          <FlatList
-            data={filteredPatients}
-            renderItem={({ item }) => <Card patient={item} onEdit={handleEditPatient} />}
-            contentContainerStyle={{ gap: 10 }}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
+        <Header
+          title="Patients"
+          search={true}
+          searchPlaceholder="Search patients"
+          onSearch={handleSearch}
+        />
+        <View style={styles.resultsContainer}>
+          <CustomText style={styles.resultsTitle}>Results</CustomText>
+          {isLoading && patients.length === 0 && (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          )}
+          {!isLoading && patients.length > 0 && (
+            <FlatList
+              data={filteredPatients}
+              renderItem={({ item }) => <Card patient={item} onEdit={handleEditPatient} />}
+              contentContainerStyle={{ gap: 10 }}
+            />
+          )}
+        </View>
+
+        <FAB
+          onPress={() => {
+            setSelectedPatient(undefined);
+            setModalVisible(true);
+          }}
+        />
+
+        {modalVisible && (
+          <PatientModal
+            visible={modalVisible}
+            onClose={() => {
+              setModalVisible(false);
+              setSelectedPatient(undefined);
+            }}
+            onSave={handleSavePatient}
+            patient={selectedPatient}
           />
         )}
-      </View>
 
-      <FAB
-        onPress={() => {
-          setSelectedPatient(undefined);
-          setModalVisible(true);
-        }}
-      />
-
-      {modalVisible && (
-        <PatientModal
-          visible={modalVisible}
-          onClose={() => {
-            setModalVisible(false);
-            setSelectedPatient(undefined);
-          }}
-          onSave={handleSavePatient}
-          patient={selectedPatient}
-        />
-      )}
-
-      <Toast />
-    </SafeAreaView>
+        <Toast />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 

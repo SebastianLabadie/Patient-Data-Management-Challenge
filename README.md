@@ -94,6 +94,7 @@ Before running the application, ensure you have the following installed:
 ### UI/UX
 - **Custom Components:** Reusable components like `Card`, `Header`, and `Modal`
 - **Error Handling:** Toast notifications for user feedback
+- **Keyboard Handling:** Currently using `TouchableWithoutFeedback` with `Keyboard.dismiss()` for keyboard dismissal. Note: For optimal keyboard handling, `react-native-keyboard-controller` is the best way, provides better performance and native keyboard events but requires custom native builds (seems too much for a challenge).
 
 ## Technologies & Libraries
 
@@ -171,6 +172,7 @@ This enhancement strategy allows for:
 - More comprehensive patient profiles
 - Better UI/UX with complete information
 - Realistic data representation
+
 
 ## Troubleshooting
 
