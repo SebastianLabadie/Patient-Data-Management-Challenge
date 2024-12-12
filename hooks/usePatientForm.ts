@@ -14,7 +14,6 @@ const patientSchema = z.object({
     message: "Invalid phone number format. Must be 10 digits starting with 0",
   }),
   address: z.string().min(10, "Address is required"),
-  photo: z.string().optional(),
   avatar: z.string().optional(),
   website: z.string().url("Invalid website URL").optional(),
   gender: z.string().min(1, "Gender is required"),

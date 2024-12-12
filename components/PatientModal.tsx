@@ -22,9 +22,9 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
     email: "",
     phone: "",
     address: "",
-    photo: "",
     website: "",
     gender: "",
+    avatar: "",
   };
 
   const { formData, errors, validateForm, updateField } = usePatientForm(patient || initialData);
@@ -53,18 +53,9 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
     });
 
     if (!result.canceled) {
-      updateField("photo", result.assets[0].uri);
       updateField("avatar", result.assets[0].uri);
     }
   };
-
-  function getImageUrl() {
-    if (formData.photo) {
-      return formData.photo;
-    }
-
-    return formData.avatar;
-  }
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
@@ -76,8 +67,8 @@ export function PatientModal({ visible, onClose, onSave, patient }: PatientModal
 
           <View style={styles.photoContainer}>
             <Pressable onPress={handleSelectPhoto}>
-              {formData.photo || formData.avatar ? (
-                <Image source={{ uri: getImageUrl() }} style={styles.photo} />
+              {formData.avatar ? (
+                <Image source={{ uri: formData.avatar }} style={styles.photo} />
               ) : (
                 <View style={styles.photoPlaceholder}>
                   <CustomText>Tap to add photo</CustomText>

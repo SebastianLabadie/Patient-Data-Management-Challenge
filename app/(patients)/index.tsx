@@ -32,11 +32,10 @@ export default function PatientsScreen() {
         const sortedPatients = sortPatientsByDate(enrichedPatients);
         setPatients(sortedPatients);
       } catch (error) {
-        console.error(error);
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: "Failed to fetch patients",
+          text2: "Failed to fetch patients" + error,
         });
       } finally {
         setIsLoading(false);

@@ -9,10 +9,6 @@ interface ContactInfo {
   address: string;
 }
 
-interface MediaContent {
-  photo?: string;
-}
-
 export interface Patient {
   name: string;
   id: string;
@@ -22,7 +18,7 @@ export interface Patient {
   avatar: string;
 }
 
-export interface EnrichedPatient extends BasePatient, ContactInfo, MediaContent, Patient {}
+export interface EnrichedPatient extends BasePatient, ContactInfo, Patient {}
 
 export interface DropdownItem {
   label: string;

@@ -1,10 +1,4 @@
-const tintColorLight = "#2f95dc";
-
 export default {
-  text: "#000",
-  background: "#F5F5F5",
-  tint: tintColorLight,
-
   primary: "#15b8a5",
   primary10: "#ECFFFD",
   primary20: "#B2FF6",

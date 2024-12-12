@@ -18,25 +18,16 @@ export function Card({ patient, onEdit }: CardProps) {
     setExpanded(!expanded);
   };
 
-  function getImageUrl() {
-    if (patient.photo) {
-      return patient.photo;
-    }
-
-    if (imageError) {
-      return "https://static-00.iconduck.com/assets.00/avatar-default-icon-2048x2048-h6w375ur.png";
-    }
-
-    return patient.avatar;
-  }
-
   return (
     <View style={styles.container}>
       <Pressable style={styles.card} onPress={() => onEdit && onEdit(patient)}>
         <View style={styles.mainContent}>
           <Image
             source={{
-              uri: getImageUrl(),
+              uri:
+                imageError || !patient.avatar
+                  ? "https://static-00.iconduck.com/assets.00/avatar-default-icon-2048x2048-h6w375ur.png"
+                  : patient.avatar,
             }}
             onError={() => setImageError(true)}
             style={styles.avatar}
