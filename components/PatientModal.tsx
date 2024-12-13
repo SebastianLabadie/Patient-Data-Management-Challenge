@@ -11,7 +11,7 @@ import {
 import CustomText from "./CustomText";
 import Colors from "@/constants/Colors";
 import * as ImagePicker from "expo-image-picker";
-import { GENDERS } from "@/utils/utils";
+import { GENDERS } from "@/constants/patientConstants";
 import Input from "./Input";
 import { usePatientForm } from "@/hooks/usePatientForm";
 import { CustomDropdown } from "./CustomDropdown";

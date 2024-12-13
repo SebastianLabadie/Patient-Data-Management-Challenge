@@ -1,10 +1,5 @@
 import { EnrichedPatient, Patient } from "@/services/types";
-
-export const GENDERS = [
-  { label: "Male", value: "Male" },
-  { label: "Female", value: "Female" },
-  { label: "Other", value: "Other" },
-];
+import { GENDERS } from "@/constants/patientConstants";
 
 export const enrichPatientData = (patients: Patient[]): EnrichedPatient[] => {
   return patients.map(patient => ({
@@ -15,10 +10,4 @@ export const enrichPatientData = (patients: Patient[]): EnrichedPatient[] => {
     phone: `0${String(Math.floor(Math.random() * 900000000) + 100000000)}`,
     email: `patient${Math.floor(Math.random() * 10000)}@example.com`,
   }));
-};
-
-export const sortPatientsByDate = (patients: EnrichedPatient[]): EnrichedPatient[] => {
-  return [...patients].sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
 };

@@ -2,7 +2,7 @@ import { Card } from "@/components/Card";
 import CustomText from "@/components/CustomText";
 import { Header } from "@/components/Header";
 import Colors from "@/constants/Colors";
-import { getPatientsApi } from "@/services/PatientsApi";
+import { getPatientsApi } from "@/services/patientsService";
 import { usePatientsStore } from "@/store/usePatientsStore";
 import { useEffect, useState } from "react";
 import {
@@ -13,12 +13,13 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { enrichPatientData, sortPatientsByDate } from "@/utils/utils";
 import { EnrichedPatient } from "@/services/types";
 import { FAB } from "@/components/FAB";
 import { PatientModal } from "@/components/PatientModal";
 import Toast from "react-native-toast-message";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { enrichPatientData } from "@/utils/enrichPatientData";
+import { sortPatientsByDate } from "@/utils/sortPatients";
 
 export default function PatientsScreen() {
   const { patients, setPatients, createPatient, updatePatient } = usePatientsStore();
