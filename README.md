@@ -71,13 +71,17 @@ Before running the application, ensure you have the following installed:
 │   └── PatientModal.tsx # Patient creation/editing modal
 ├── constants/         # App-wide constants
 │   └── Colors.ts      # Color definitions
+│   └── patientConstants.ts # Patient-related constants
+├── hooks/             # Custom hooks
+│   └── usePatientForm.ts # Form handling hook
 ├── services/          # API and external service integrations
-│   ├── PatientsApi.ts # Patient API service
+│   ├── patientsService.ts # Patient API service
 │   └── types.ts       # TypeScript interfaces
 ├── store/             # State management
 │   └── usePatientsStore.ts # Zustand store for patients
 └── utils/             # Utility functions
-    └── utils.ts       # Helper functions
+    └── enrichPatientData.ts # Patient data enhancement
+    └── sortPatients.ts # Patient sorting utilities
 ```
 
 ## Design Decisions
